@@ -61,4 +61,21 @@ exports.getAllAttractionsReviews = () => {
 */
 exports.getAttractionsByReviewScore = (score) => {
   // TODO: Implement a method that gets all attractions with an average review score equal or higher than a certain score.
+  
+  score = Number.parseFloat(score)  
+
+  if (Number.isNaN(score) || score < 1)
+    return attractions
+
+  const map = {}
+
+  for (let i = 0; i < reviews.length; i++) {
+    const review = reviews[i]
+    map[review.attractionId] = {
+      count: map[review.attractionId] ? map[review.attractionId].count + 1 : 1,
+      sum: map[review.attractionId] ? map[review.attractionId].sum + review.score : review.score,
+    }
+  }
+  
+  return attractions.map(attraction => { return { score: map[attraction.id] ? map[attraction.id].sum / map[attraction.id].count : 0, ...attraction   } }).filter(attraction => map[attraction.id] && map[attraction.id].sum / map[attraction.id].count >= score)
 }
