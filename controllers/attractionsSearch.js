@@ -77,5 +77,5 @@ exports.getAttractionsByReviewScore = (score) => {
     }
   }
   
-  return attractions.map(attraction => { return { score: map[attraction.id] ? map[attraction.id].sum / map[attraction.id].count : 0, ...attraction   } }).filter(attraction => map[attraction.id] && map[attraction.id].sum / map[attraction.id].count >= score)
+  return attractions.map(attraction => { return { score: map[attraction.id] ? map[attraction.id].sum / map[attraction.id].count : 0, ...attraction   } }).filter(attraction => map[attraction.id] && attraction.score >= score)
 }
