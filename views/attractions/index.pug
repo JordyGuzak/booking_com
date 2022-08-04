@@ -1,9 +1,50 @@
 include _list
 
 div.filters
-  // TODO - Enable filtering attractions by a given score between 1 to 5
-  label Show me things to do that have an average score higher than 
-  input#search(data-filter)
+  label Show me things to do that have an average score higher than
+  input#search(data-filter) 
 
-// TODO - display list of filtered attractions here
 +attractions_list(attractions)
+
+script.
+  window.onload = onLoadDocumentEventHandler
+
+  function initialize() {
+      const searchField = document.getElementById('search')
+      searchField.addEventListener('change', onSearchValueChangedEventHandler)
+  }
+
+  function onLoadDocumentEventHandler(event) {
+      initialize()
+  }
+
+  async function onSearchValueChangedEventHandler(event) {
+     event.preventDefault()
+     const attractions = await fetch(`attractions/search?score=${event.target.value}`).then(res => res.json())
+     setAttractions(attractions) 
+  }
+  
+  function setAttractions(attractions) {
+    const container = document.getElementById('attractions')
+
+    while (container.firstChild)
+      container.firstChild.remove()
+
+    attractions.forEach(attraction => {
+      const attractionDiv = document.createElement('div')
+      attractionDiv.classList.add('attraction')
+      
+      const scoreDiv = document.createElement('div')
+      scoreDiv.classList.add('attraction-score')
+      scoreDiv.appendChild(document.createTextNode(attraction.score ? attraction.score.toFixed(2) : '?'))
+      
+      const nameDiv = document.createElement('div')
+      nameDiv.classList.add('attraction-name')
+      nameDiv.appendChild(document.createTextNode(attraction.name))
+      
+      attractionDiv.appendChild(scoreDiv)
+      attractionDiv.appendChild(nameDiv)
+      
+      container.appendChild(attractionDiv)
+    })
+  }

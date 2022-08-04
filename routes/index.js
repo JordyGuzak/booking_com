@@ -9,9 +9,15 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/reviews', function(req, res, next) {
-
   res.render('index', { 
     reviews: Controller.getAllAttractionsReviews()
+  });
+});
+
+router.get('/search', function (req, res, next) {
+  const { score } = req.query;
+  res.render('index', {
+    attractions: Controller.getAttractionsByReviewScore(score)
   });
 });
 
